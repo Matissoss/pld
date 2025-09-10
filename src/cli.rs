@@ -1,7 +1,7 @@
 // pld - src/cli.rs
 // ================
 // made by matissoss
-// licensed under
+// licensed under MPL 2.0
 
 pub fn version() -> ! {
     println!("pld v<VERSION>");

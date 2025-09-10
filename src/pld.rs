@@ -1,7 +1,7 @@
 // pld - src/pld.rs
 // ----------------
 // made by matissoss
-// licensed under STH
+// licensed under MPL 2.0
 
 use crate::obj::{
     elf

@@ -1,8 +1,9 @@
 // pld - src/main.rs
 // =================
 // made by matissoss
-// licensed under STH
+// licensed under MPL 2.0
 
+pub mod mmm;
 pub mod cli;
 pub mod pld;
 pub mod obj;
