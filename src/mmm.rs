@@ -21,6 +21,7 @@ pub unsafe fn memcpy<T>(src: *const T, dst: *mut T, sz: usize) {
 pub unsafe fn __memcpy(src: *const u8, dst: *mut u8, sz: usize) {
     unsafe {
         let mut idx = 0;
+        // we might need to optimize it later
         while idx < sz {
             *dst.add(idx) = *src.add(idx);
             idx += 1;
@@ -43,3 +44,31 @@ pub unsafe fn __malloc(sz: usize, align: usize) -> *mut u8 {
     }
 }
 
+pub trait FromPtr {
+    unsafe fn from_ptr(ptr: *const u8) -> Self;
+}
+pub trait FromByteSlice {
+    unsafe fn from_bytes(bytes: &[u8]) -> Self;
+}
+
+impl<T: Sized> FromByteSlice for T {
+    unsafe fn from_bytes(bytes: &[u8]) -> Self {
+        #[cfg(debug_assertions)]
+        if bytes.len() != size_of::<T>() {
+            panic!("FromByteSlice: bytes does not have size of T ({})", size_of::<T>());
+        }
+        unsafe {
+            core::ptr::read(std::mem::transmute::<*const u8, *const T>(bytes.as_ptr()))
+        }
+    }
+}
+
+impl<T: Sized> FromPtr for T {
+    unsafe fn from_ptr(ptr: *const u8) -> Self {
+        unsafe {
+            let nptr = malloc(size_of::<T>(), align_of::<T>());
+            memcpy(ptr, nptr, size_of::<T>());
+            core::ptr::read(std::mem::transmute::<*mut u8, *const T>(nptr))
+        }
+    }
+}

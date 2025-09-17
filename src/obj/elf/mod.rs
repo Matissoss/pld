@@ -3,23 +3,39 @@
 // made by matissoss
 // licensed under MPL 2.0
 
+pub mod par;
+pub mod link;
+
 use crate::cli;
 
 // placeholder struct
-pub struct Elf;
+
+pub type Elf = Elf64;
+
+#[derive(Debug)]
+pub struct Elf64;
+pub struct Elf32;
+
+impl Elf32 {
+    pub fn to_64_bit(&self) -> Elf64 {
+        todo!()
+    }
+}
 
 impl Elf {
     // placeholder methods (to be replaced with real)
     pub fn link(_cli: &cli::Cli, _vec: Vec<Elf>) -> Vec<u8> {
         todo!("trololo");
     }
-    pub fn from_bytes(_bytes: &[u8]) -> Result<Elf, String> {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Elf, String> {
+        println!("{:?}", par::parelf(bytes));
         todo!("trololo")
     }
 }
 
 // low-level structs
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Ehdr {
     pub magic: [u8; 16],
@@ -37,6 +53,7 @@ pub struct Elf32_Ehdr {
     pub e_shnum: u16,
     pub e_shstrndx: u16,
 }
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Ehdr {
     pub magic: [u8; 16],
@@ -55,6 +72,7 @@ pub struct Elf64_Ehdr {
     pub e_shstrndx: u16,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Phdr {
     pub p_type: u32,
@@ -66,6 +84,7 @@ pub struct Elf32_Phdr {
     pub p_flags: u32,
     pub p_align: u32,
 }
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Phdr {
     pub p_type: u32,
@@ -78,6 +97,7 @@ pub struct Elf64_Phdr {
     pub p_align: u64,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Shdr {
     pub sh_name: u32,
@@ -92,6 +112,7 @@ pub struct Elf32_Shdr {
     pub sh_entsize: u32,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Shdr {
     pub sh_name: u32,
@@ -106,6 +127,7 @@ pub struct Elf64_Shdr {
     pub sh_entsize: u64,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Sym {
     pub st_name: u32,
@@ -116,6 +138,7 @@ pub struct Elf32_Sym {
     pub sh_shndx: u16,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Sym {
     pub st_name: u32,
@@ -126,22 +149,26 @@ pub struct Elf64_Sym {
     pub st_size: u64,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Rel {
     pub r_offset: u32,
     pub r_info: u32
 }
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf32_Rela {
     pub r_offset: u32,
     pub r_info: u32,
     pub r_addend: i32,
 }
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Rel {
     pub r_offset: u64,
     pub r_info: u64
 }
+#[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(C)]
 pub struct Elf64_Rela {
     pub r_offset: u64,
