@@ -54,7 +54,22 @@ pub fn parelf32(elf: &[u8]) -> Result<Elf32, ElfParError> {
     let ehdr = unsafe {
         Elf32_Ehdr::from_ptr(elf.as_ptr()) 
     };
+    // now we'll fetch all the needed things
+
+    // first we check if our file is large enough
+    if (elf.len() - (ehdr.e_shoff as usize)).lt(&((ehdr.e_shnum as usize) * (ehdr.e_shentsize as usize))) {
+        return Err(TooSmallInput);
+    }
+    // then we make slice out of it
+    let shdrs: &[Elf32_Shdr] = unsafe {
+        let ptr = std::mem::transmute::<*const u8, *const Elf32_Shdr>(elf.as_ptr().add(ehdr.e_shoff as usize));
+        std::slice::from_raw_parts(ptr, ehdr.e_shnum as usize)
+    };
     println!("{:?}", ehdr);
+    for shdr in shdrs {
+        println!("{:?}", shdr);
+    }
+
     todo!()
 }
 

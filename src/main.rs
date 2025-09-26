@@ -3,10 +3,10 @@
 // made by matissoss
 // licensed under MPL 2.0
 
-pub mod mmm;
 pub mod cli;
 pub mod pld;
 pub mod obj;
+pub mod mmm;
 
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
